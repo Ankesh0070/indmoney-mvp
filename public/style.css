@@ -1,0 +1,659 @@
+/* ═══════════════════════════════════════════════════════
+   INDMONEY — Design System
+   Dark-mode-first fintech UI. Tokens and component patterns
+   applied from the approved INDmoney design canvas (20-screen
+   dark SIP-investing app spec) — not a copy of any specific
+   app's logo, wordmark or proprietary assets.
+   ═══════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* dark surfaces (default — most screens) */
+  --bg: #0b0e14;
+  --bg2: #121a28;
+  --card-bg: #15181f;
+  --chip-bg: #1d2027;
+  --disabled-bg: #1d2027;
+  --text-primary: #ffffff;
+  --text-secondary: #8a8d93;
+  --text-tertiary: #5c5f66;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.06);
+
+  /* glass / gradient surfaces */
+  --glass-grad: linear-gradient(135deg, #25304a, #3e507a 55%, #516497);
+  --promo-grad: linear-gradient(135deg, #1a2238, #2a3a5e 60%, #3a4d7c);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+  /* brand accents — same in light and dark screens */
+  --primary: #089958;
+  --accent: #1fd896;
+  --danger: #f13745;
+  --amber: #eebe6e;
+  --info: #3d99ff;
+
+  --accent-tint: rgba(31, 216, 150, 0.12);
+  --accent-tint-soft: rgba(31, 216, 150, 0.1);
+  --danger-tint: rgba(241, 55, 69, 0.12);
+  --amber-tint: rgba(238, 190, 110, 0.12);
+
+  --radius-lg: 20px;
+  --radius: 18px;
+  --radius-sm: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #05060a;
+  color: #e8eaed;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; }
+input, select { font-family: inherit; }
+a { text-decoration: none; color: inherit; }
+
+/* ── Phone frame shell ─────────────────────────────────── */
+#app-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+}
+#phone-frame {
+  width: 100%;
+  max-width: 420px;
+  min-height: 860px;
+  background: var(--bg);
+  border-radius: 40px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 10px solid #000000;
+}
+@media (max-width: 460px) {
+  #app-root { padding: 0; }
+  #phone-frame { border-radius: 0; border: none; min-height: 100vh; box-shadow: none; max-width: 100%; }
+}
+
+.status-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px 4px; font-size: 13px; font-weight: 700; color: #fff;
+  flex-shrink: 0; position: relative; z-index: 20;
+}
+.status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 12px; }
+/* the shared status bar sits outside #screens, so it switches color via
+   the active screen's own light/dark mode rather than JS */
+#phone-frame:has(.screen.active.screen-light) .status-bar { color: #101314; }
+
+#screens { flex: 1; position: relative; overflow: hidden; }
+.screen {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 90px;
+  animation: screenIn 0.25s ease;
+  background: linear-gradient(180deg, var(--bg), var(--bg2));
+  color: var(--text-primary);
+}
+.screen.active { display: block; }
+@keyframes screenIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.screen.no-nav-pad { padding-bottom: 24px; }
+
+/* Onboarding / auth / KYC data-entry screens are light, matching the
+   canvas's real-app reference screenshots; every component below reads
+   its colors from the custom properties redefined here, so nothing
+   else needs a separate light-mode rule. */
+.screen.screen-light {
+  --bg: #ffffff;
+  --bg2: #ffffff;
+  --card-bg: #ffffff;
+  --chip-bg: #f2f3f5;
+  --disabled-bg: #e4e6ea;
+  --text-primary: #101314;
+  --text-secondary: #6b6f76;
+  --text-tertiary: #a7abb2;
+  --border: #e4e6ea;
+  --border-soft: #e4e6ea;
+}
+
+/* ── Bottom nav ─────────────────────────────────────────── */
+#bottom-nav {
+  display: none;
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #0b0e14; border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  justify-content: space-around; z-index: 50;
+}
+#bottom-nav.visible { display: flex; }
+.nav-item {
+  background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: #6b6f77; font-size: 10.5px; font-weight: 600; padding: 4px 10px; border-radius: 12px;
+}
+.nav-item .nav-icon { font-size: 19px; }
+.nav-item.active { color: var(--accent); font-weight: 700; }
+
+/* ── Generic layout helpers ─────────────────────────────── */
+.px { padding-left: 20px; padding-right: 20px; }
+.pt { padding-top: 20px; }
+.center-flex { display: flex; align-items: center; justify-content: center; }
+.row { display: flex; align-items: center; }
+.row-between { display: flex; align-items: center; justify-content: space-between; }
+.col { display: flex; flex-direction: column; }
+.gap-4 { gap: 4px; } .gap-8 { gap: 8px; } .gap-12 { gap: 12px; } .gap-16 { gap: 16px; }
+.mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; } .mt-32 { margin-top: 32px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.muted { color: var(--text-secondary); }
+.faint { color: var(--text-tertiary); }
+.pos { color: var(--accent); }
+.neg { color: var(--danger); }
+.bold { font-weight: 700; }
+.small { font-size: 12px; }
+.tiny { font-size: 10.5px; }
+
+h1, h2, h3 { color: var(--text-primary); }
+.screen-title { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+.screen-sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+/* ── Logo / Brand ───────────────────────────────────────── */
+.brand-mark {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: #101311; border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 24px; color: #fff; box-shadow: var(--card-shadow);
+}
+.brand-wordmark { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
+.brand-wordmark span { color: var(--accent); }
+
+/* ── Buttons ────────────────────────────────────────────── */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 15px 20px; border-radius: 999px; border: none;
+  font-weight: 700; font-size: 16px; transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:disabled { background: var(--disabled-bg); color: var(--text-tertiary); }
+.btn-secondary { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-outline { background: transparent; color: var(--text-primary); border: 1.5px solid var(--border); }
+.btn-danger-outline { background: transparent; color: var(--danger); border: 1.5px solid var(--danger); }
+.btn-sm { padding: 9px 14px; font-size: 12.5px; border-radius: 999px; }
+.btn-link { background: none; color: var(--accent); font-weight: 700; font-size: 13.5px; width: auto; padding: 4px; }
+
+/* ── Inputs ─────────────────────────────────────────────── */
+.field-label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 7px; display: block; }
+.field-input {
+  width: 100%; padding: 15px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+  font-size: 16px; background: var(--card-bg); color: var(--text-primary); outline: none;
+}
+.screen:not(.screen-light) .field-input { background: #1d2027; }
+.field-input::placeholder { color: var(--text-tertiary); }
+.field-input:focus { border-color: var(--primary); }
+.otp-row { display: flex; gap: 10px; justify-content: space-between; }
+.otp-box {
+  width: 56px; height: 56px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+  text-align: center; font-size: 22px; font-weight: 700; outline: none;
+  background: var(--card-bg); color: var(--text-primary);
+}
+.otp-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(8, 153, 88, 0.14); }
+
+/* ── Cards ──────────────────────────────────────────────── */
+.card {
+  background: var(--card-bg); border-radius: var(--radius); padding: 18px;
+  box-shadow: var(--card-shadow); margin-bottom: 14px; border: 1px solid var(--border-soft);
+}
+.card-flat { background: var(--card-bg); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); box-shadow: none; }
+.card-glass { border-radius: var(--radius-lg); padding: 18px; background: var(--glass-grad); box-shadow: var(--card-shadow); margin-bottom: 14px; color: #fff; }
+
+/* ── Net worth hero ─────────────────────────────────────── */
+.hero-gradient {
+  background: linear-gradient(180deg, var(--bg), var(--bg2));
+  border-radius: 0 0 40px 40px; padding: 18px 20px 26px; color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.hero-greeting { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+.hero-amount { font-size: 34px; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+.hero-change { font-size: 13px; margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+.hero-change .chip { background: rgba(255, 255, 255, 0.08); color: var(--accent); padding: 6px 12px; border-radius: 999px; font-weight: 700; }
+
+.quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: -24px; padding: 0 20px; position: relative; }
+.quick-action {
+  background: var(--card-bg); border-radius: 16px; padding: 12px 6px; text-align: center;
+  box-shadow: var(--card-shadow); display: flex; flex-direction: column; align-items: center; gap: 8px;
+  border: 1px solid var(--border-soft); color: var(--text-primary);
+}
+.quick-action .qa-icon { font-size: 20px; }
+.quick-action .qa-label { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+
+/* ── List rows ──────────────────────────────────────────── */
+.list-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--border);
+}
+.list-row:first-child { border-top: none; }
+.avatar-icon {
+  width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; font-weight: 800; color: #fff;
+}
+.badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.badge-active { background: var(--accent-tint); color: var(--accent); }
+.badge-paused { background: var(--amber-tint); color: var(--amber); }
+.badge-cancelled { background: var(--danger-tint); color: var(--danger); }
+
+/* ── Section headers ────────────────────────────────────── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.section-header h3 { font-size: 16px; font-weight: 700; display: flex; align-items: center; }
+.section-header h3::before {
+  content: ''; display: inline-block; width: 3px; height: 16px; border-radius: 2px;
+  background: var(--accent); margin-right: 8px;
+}
+
+/* ── Top bar (inner screens) ────────────────────────────── */
+.topbar {
+  display: flex; align-items: center; gap: 12px; padding: 8px 20px 14px;
+  position: sticky; top: 0; z-index: 10; background: transparent;
+}
+.topbar.solid { padding-bottom: 14px; }
+.back-btn {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--chip-bg); border: none;
+  display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0;
+  color: var(--text-primary);
+}
+.topbar-title { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+
+/* ── Category pills / tabs ──────────────────────────────── */
+.pill-row { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; }
+.pill-row::-webkit-scrollbar { display: none; }
+.pill {
+  flex-shrink: 0; padding: 8px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+  background: transparent; color: var(--text-secondary); border: 1px solid var(--border); white-space: nowrap;
+}
+.pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ── Fund card ──────────────────────────────────────────── */
+.fund-card {
+  background: var(--card-bg); border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+  box-shadow: var(--card-shadow); display: flex; gap: 12px; align-items: center; border: 1px solid var(--border-soft); width: 100%;
+  text-align: left; color: var(--text-primary);
+}
+.fund-icon {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center;
+  justify-content: center; font-weight: 900; color: #fff; font-size: 16px;
+}
+.fund-name { font-size: 13.5px; font-weight: 700; line-height: 1.3; color: var(--text-primary); }
+.fund-meta { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
+.fund-return { text-align: right; flex-shrink: 0; }
+.fund-return .val { font-size: 15px; font-weight: 800; color: var(--accent); }
+.fund-return .lbl { font-size: 10px; color: var(--text-secondary); }
+
+/* ── Stars rating ───────────────────────────────────────── */
+.stars { color: var(--amber); font-size: 11px; letter-spacing: 1px; }
+
+/* ── Toggle switch ──────────────────────────────────────── */
+.switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-track {
+  position: absolute; inset: 0; background: #3a3d44; border-radius: 999px; transition: 0.2s;
+}
+.switch-track::before {
+  content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+  background: #fff; border-radius: 50%; transition: 0.2s; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.switch input:checked + .switch-track { background: var(--primary); }
+.switch input:checked + .switch-track::before { transform: translateX(18px); }
+
+/* ── Toast ──────────────────────────────────────────────── */
+#toast {
+  position: absolute; bottom: 100px; left: 20px; right: 20px; background: #101311; color: #fff;
+  padding: 13px 16px; border-radius: 14px; font-size: 13px; font-weight: 600; text-align: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s; transform: translateY(10px);
+  z-index: 200; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.08);
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+
+/* ── Progress dots (KYC steps) ──────────────────────────── */
+.step-dots { display: flex; gap: 6px; justify-content: center; margin: 4px 0 20px; }
+.step-dot { width: 22px; height: 4px; border-radius: 2px; background: var(--border); }
+.step-dot.done { background: var(--primary); }
+.step-dot.current { background: var(--primary); }
+
+/* ── Misc ───────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+.empty-state { text-align: center; padding: 50px 24px; color: var(--text-secondary); }
+.empty-state .emoji { font-size: 40px; margin-bottom: 10px; }
+.sim-chip { background: var(--chip-bg); color: var(--text-secondary); font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; }
+
+/* ═══════════════════════════════════════════════════════
+   SIP RECOVERY ASSISTANT — feature-scoped additions.
+   Reuses all tokens/components above (.card, .btn, .pill,
+   .step-dot, .list-row) rather than introducing a new
+   design language.
+   ═══════════════════════════════════════════════════════ */
+.recovery-alert {
+  display: flex; gap: 12px; padding: 16px; border-radius: var(--radius); margin-bottom: 14px;
+  border: 1px solid var(--border-soft);
+}
+.recovery-alert-danger { background: var(--danger-tint); border-color: rgba(241, 55, 69, 0.25); }
+.recovery-alert-pending { background: var(--amber-tint); border-color: rgba(238, 190, 110, 0.3); }
+.recovery-alert-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.recovery-alert-body { flex: 1; min-width: 0; }
+
+.rbadge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.rbadge-success { background: var(--accent-tint); color: var(--accent); }
+.rbadge-danger { background: var(--danger-tint); color: var(--danger); }
+.rbadge-pending { background: var(--amber-tint); color: var(--amber); }
+.rbadge-muted { background: var(--chip-bg); color: var(--text-secondary); }
+
+.recovery-scenario-row { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 10px; scrollbar-width: none; }
+.recovery-scenario-row::-webkit-scrollbar { display: none; }
+.recovery-scenario-pill {
+  flex-shrink: 0; padding: 9px 14px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+  background: var(--card-bg); color: var(--text-secondary); border: 1px solid var(--border); white-space: nowrap;
+}
+.recovery-scenario-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.recovery-sip-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft); margin-bottom: 10px; background: var(--card-bg);
+}
+
+.recovery-timeline { display: flex; flex-direction: column; gap: 0; }
+.recovery-timeline-item { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
+.recovery-timeline-item:first-child { border-top: none; }
+.recovery-timeline-dot { font-size: 16px; flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--chip-bg); display: flex; align-items: center; justify-content: center; }
+.recovery-timeline-content { flex: 1; min-width: 0; }
+
+.recovery-stepper { margin: 4px 0 0; }
+
+.recovery-dialog-backdrop {
+  position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 300;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.recovery-dialog { width: 100%; max-width: 340px; margin: 0; }
+
+.recovery-notif-unread { background: var(--accent-tint-soft); border-radius: var(--radius-sm); margin: 0 -10px; padding: 14px 10px; }
+.recovery-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-left: 4px; vertical-align: middle; }
+
+.recovery-offline-banner {
+  background: var(--chip-bg); color: var(--text-secondary); font-size: 12px; font-weight: 600;
+  padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border);
+}
+
+.recovery-metric-tile { background: var(--card-bg); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--border-soft); }
+.recovery-metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ═══════════════════════════════════════════════════════
+   SALARY-ALIGNED SIP SCHEDULER — feature-scoped additions.
+   Reuses all tokens/components above (.card, .btn, .pill,
+   .list-row, .recovery-timeline, .recovery-scenario-*)
+   rather than introducing a new design language.
+   ═══════════════════════════════════════════════════════ */
+.sched-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.sched-badge-success { background: var(--accent-tint); color: var(--accent); }
+.sched-badge-danger { background: var(--danger-tint); color: var(--danger); }
+.sched-badge-pending { background: var(--amber-tint); color: var(--amber); }
+.sched-badge-amber { background: var(--amber-tint); color: var(--amber); }
+.sched-badge-muted { background: var(--chip-bg); color: var(--text-secondary); }
+
+.sched-sip-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft); margin-bottom: 10px; background: var(--card-bg);
+}
+.sched-sip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.sched-dates-row { margin-bottom: 4px; }
+
+.sched-cal { background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 10px; }
+.sched-cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--text-secondary); font-weight: 700; margin-bottom: 6px; }
+.sched-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.sched-cal-cell {
+  min-height: 42px; border-radius: 8px; padding: 4px; background: var(--chip-bg);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.sched-cal-cell-empty { background: transparent; }
+.sched-cal-today { border: 1.5px solid var(--primary); }
+.sched-cal-daynum { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
+.sched-cal-dots { display: flex; flex-wrap: wrap; gap: 1px; justify-content: center; min-height: 14px; }
+.sched-cal-dot { font-size: 9px; line-height: 1; cursor: default; }
+
+.sched-reminder-toggle { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+
+.recovery-reminder-toggle { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+
+/* ═══════════════════════════════════════════════════════
+   SIP PAUSE & RESUME MANAGER — feature-scoped additions.
+   Reuses all tokens/components above (.card, .btn, .pill,
+   .list-row, .recovery-timeline, .recovery-scenario-*,
+   .empty-state) rather than introducing a new design language.
+   ═══════════════════════════════════════════════════════ */
+.pause-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.pause-badge-success { background: var(--accent-tint); color: var(--accent); }
+.pause-badge-danger { background: var(--danger-tint); color: var(--danger); }
+.pause-badge-pending { background: var(--amber-tint); color: var(--amber); }
+.pause-badge-amber { background: var(--amber-tint); color: var(--amber); }
+.pause-badge-muted { background: var(--chip-bg); color: var(--text-secondary); }
+
+.pause-sip-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft); margin-bottom: 10px; background: var(--card-bg);
+}
+.pause-sip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.pause-sched-scheduled { color: var(--text-secondary); }
+.pause-sched-skipped { color: var(--amber); font-weight: 600; }
+.pause-sched-protected { color: var(--danger); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════
+   AUTOPAY HEALTH & MANDATE REPAIR ASSISTANT — feature-scoped
+   additions. Reuses all tokens/components above (.card, .btn,
+   .pill, .list-row, .recovery-timeline, .recovery-scenario-*,
+   .empty-state) rather than introducing a new design language.
+   ═══════════════════════════════════════════════════════ */
+.mandate-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.mandate-badge-success { background: var(--accent-tint); color: var(--accent); }
+.mandate-badge-danger { background: var(--danger-tint); color: var(--danger); }
+.mandate-badge-pending { background: var(--amber-tint); color: var(--amber); }
+.mandate-badge-amber { background: var(--amber-tint); color: var(--amber); }
+.mandate-badge-muted { background: var(--chip-bg); color: var(--text-secondary); }
+
+.mandate-sip-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft); margin-bottom: 10px; background: var(--card-bg);
+}
+.mandate-sip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   SIP CASH-FLOW PLANNER — feature-scoped additions. Reuses all
+   tokens/components above (.card, .card-glass, .btn, .list-row,
+   .recovery-timeline, .recovery-metric-grid, .recovery-scenario-*,
+   .empty-state, .field-input) rather than introducing a new
+   design language.
+   ═══════════════════════════════════════════════════════ */
+.cf-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.cf-badge-success { background: var(--accent-tint); color: var(--accent); }
+.cf-badge-danger { background: var(--danger-tint); color: var(--danger); }
+.cf-badge-pending { background: var(--amber-tint); color: var(--amber); }
+.cf-badge-amber { background: var(--amber-tint); color: var(--amber); }
+.cf-badge-muted { background: var(--chip-bg); color: var(--text-secondary); }
+
+.cf-row { gap: 12px; }
+.cf-warn { color: var(--amber); font-weight: 600; }
+.cf-amount-pos { color: var(--accent); }
+.cf-amount-neg { color: var(--danger); }
+
+.cf-input {
+  width: 100%; padding: 13px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+  font-size: 14px; background: var(--card-bg); color: var(--text-primary); outline: none; margin-top: 6px;
+}
+.screen:not(.screen-light) .cf-input { background: #1d2027; }
+.cf-input::placeholder { color: var(--text-tertiary); }
+.cf-input:focus { border-color: var(--primary); }
+
+.cf-bar-track { height: 6px; border-radius: 999px; background: var(--chip-bg); margin-top: 8px; overflow: hidden; }
+.cf-bar-fill { height: 100%; border-radius: 999px; }
+.cf-bar-pos { background: var(--accent); }
+.cf-bar-neg { background: var(--danger); }
+
+.cf-legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; font-size: 11px; color: var(--text-secondary); }
+.cf-legend span { display: inline-flex; align-items: center; gap: 4px; }
+
+.cf-cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--text-secondary); margin-top: 10px; }
+.cf-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px; }
+.cf-cal-cell {
+  aspect-ratio: 1; border: 1px solid var(--border-soft); border-radius: var(--radius-sm); background: var(--card-bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; padding: 2px;
+}
+.cf-cal-cell.cf-cal-empty { border: none; background: none; cursor: default; }
+.cf-cal-cell.selected { border-color: var(--primary); border-width: 2px; }
+.cf-cal-cell.today { background: var(--accent-tint); }
+.cf-cal-daynum { font-size: 12px; font-weight: 600; }
+.cf-cal-dots { display: flex; gap: 2px; min-height: 6px; }
+.cf-cal-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+.cf-cal-dot-sip { background: var(--primary); }
+.cf-cal-dot-income { background: var(--accent); }
+.cf-cal-dot-expense { background: var(--amber); }
+.cf-cal-dot-failed { background: var(--danger); }
+.cf-cal-dot-pending { background: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════════════════
+   MY FIRST-YEAR SIP JOURNEY — feature-scoped additions. Reuses all
+   tokens/components above (.card, .card-glass, .btn, .pill-row, .pill,
+   .section-header, .empty-state, .switch) rather than introducing a
+   new design language.
+   ═══════════════════════════════════════════════════════ */
+.edu-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.edu-badge-success { background: var(--accent-tint); color: var(--accent); }
+.edu-badge-danger { background: var(--danger-tint); color: var(--danger); }
+.edu-badge-pending { background: var(--amber-tint); color: var(--amber); }
+.edu-badge-amber { background: var(--amber-tint); color: var(--amber); }
+.edu-badge-muted { background: var(--chip-bg); color: var(--text-secondary); }
+
+.edu-disclaimer { font-size: 11.5px; color: var(--text-secondary); background: var(--chip-bg); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 12px; line-height: 1.45; }
+.edu-amount-pos { color: var(--accent); }
+.edu-amount-neg { color: var(--danger); }
+.edu-example { background: var(--chip-bg); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; color: var(--text-secondary); }
+.edu-real-note { color: var(--accent); margin-bottom: 8px; }
+
+.edu-pill-row { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; margin-bottom: 12px; }
+.edu-pill-row::-webkit-scrollbar { display: none; }
+.edu-pill {
+  flex-shrink: 0; padding: 8px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+  background: transparent; color: var(--text-secondary); border: 1px solid var(--border); white-space: nowrap;
+}
+.edu-pill-active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.edu-nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.edu-nav-tile {
+  padding: 14px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); background: var(--card-bg);
+  color: var(--text-primary); font-size: 12.5px; font-weight: 700; text-align: left;
+}
+.edu-reset-btn { width: 100%; padding: 13px; border-radius: var(--radius); border: 1.5px solid var(--danger); background: transparent; color: var(--danger); font-weight: 700; }
+
+.edu-month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.edu-month-card {
+  padding: 10px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); background: var(--card-bg);
+  text-align: left; display: flex; flex-direction: column; gap: 4px;
+}
+.edu-month-card-selected { border-color: var(--primary); border-width: 2px; }
+.edu-month-card-future { opacity: 0.7; border-style: dashed; }
+.edu-month-detail { }
+
+.edu-slider { width: 100%; margin: 10px 0 16px; accent-color: var(--primary); }
+
+.edu-chart { width: 100%; height: auto; display: block; }
+.edu-chart-axis { stroke: var(--border-soft); stroke-width: 1; }
+.edu-chart-line { fill: none; stroke-width: 2.5; }
+.edu-chart-line-invested { stroke: var(--text-tertiary); stroke-dasharray: 4 3; }
+.edu-chart-line-value { stroke: var(--accent); }
+.edu-chart-legend { display: flex; gap: 14px; font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
+.edu-legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.edu-legend-invested { background: var(--text-tertiary); }
+.edu-legend-value { background: var(--accent); }
+
+.edu-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.edu-table th, .edu-table td { padding: 7px 6px; text-align: left; border-bottom: 1px solid var(--border-soft); }
+.edu-table th { color: var(--text-secondary); font-weight: 600; font-size: 11px; }
+
+.edu-lesson-card { margin-bottom: 10px; }
+.edu-quiz-card { margin-bottom: 10px; }
+.edu-quiz-options { display: flex; gap: 8px; }
+.edu-quiz-option {
+  flex: 1; padding: 11px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: var(--card-bg);
+  color: var(--text-primary); font-weight: 700; font-size: 13px;
+}
+.edu-quiz-option-correct { border-color: var(--accent); background: var(--accent-tint); color: var(--accent); }
+.edu-quiz-option-wrong { border-color: var(--danger); background: var(--danger-tint); color: var(--danger); }
+
+.edu-progress-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.edu-prompt-banner { border: 1px solid var(--accent); background: var(--accent-tint); margin-bottom: 14px; }
+.edu-dismiss-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 12px; font-weight: 700; padding: 8px; }
+
+.edu-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border-soft); }
+
+/* ───────────────────────── Feature 7: SIP Continuity Insights ───────────────────────── */
+.disc-sip-row { margin-bottom: 10px; }
+.disc-help-card { margin-bottom: 10px; }
+.disc-option-list { display: flex; flex-direction: column; gap: 8px; }
+.disc-option {
+  width: 100%; text-align: left; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+  background: var(--card-bg); color: var(--text-primary); font-weight: 600; font-size: 13px;
+}
+.disc-option-selected { border-color: var(--primary); background: var(--accent-tint); color: var(--primary); }
+.disc-feedback-text { font-size: 13px; color: var(--text-primary); background: var(--chip-bg); border-radius: var(--radius-sm); padding: 10px 12px; line-height: 1.45; }
+.disc-theme-select { font-size: 12px; }
+
+/* Feature 8: SIP Help Assistant */
+.home-rag-card {
+  position: relative; isolation: isolate; width: 100%; overflow: hidden;
+  display: grid; grid-template-columns: 48px 1fr 34px; align-items: center; gap: 12px;
+  margin-bottom: 16px; padding: 17px 15px; border: 0; border-radius: 20px;
+  color: #fff; text-align: left; cursor: pointer;
+  background: linear-gradient(125deg, #5032b8 0%, #7757e8 52%, #267ee8 100%);
+  box-shadow: 0 12px 28px rgba(83, 55, 185, .28);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.home-rag-card::before {
+  content: ''; position: absolute; z-index: -1; width: 150px; height: 150px;
+  right: -42px; top: -82px; border-radius: 50%; background: rgba(255,255,255,.15);
+}
+.home-rag-card::after {
+  content: ''; position: absolute; z-index: -1; width: 90px; height: 90px;
+  left: 22%; bottom: -72px; border-radius: 50%; background: rgba(255,255,255,.1);
+}
+.home-rag-card:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(83, 55, 185, .34); }
+.home-rag-card:active { transform: scale(.985); }
+.home-rag-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.home-rag-orb {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px;
+  color: #5738bb; font-size: 25px; background: linear-gradient(145deg, #fff, #e7e2ff);
+  box-shadow: 0 7px 18px rgba(24, 13, 76, .25);
+}
+.home-rag-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.home-rag-copy strong { font-size: 15px; line-height: 1.3; }
+.home-rag-copy > span:not(.home-rag-kicker) { color: rgba(255,255,255,.9); font-size: 11px; line-height: 1.4; }
+.home-rag-copy small { margin-top: 3px; color: rgba(255,255,255,.7); font-size: 9px; font-weight: 600; }
+.home-rag-kicker { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; font-size: 9px; font-weight: 800; letter-spacing: 1.2px; }
+.home-rag-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #70f4c2; box-shadow: 0 0 0 4px rgba(112,244,194,.16); }
+.home-rag-arrow {
+  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+  color: #fff; font-size: 20px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.22);
+}
+.asst-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.asst-history-row { width:100%; background:transparent; color:inherit; border:0; text-align:left; }
+.asst-context { padding:10px 12px; border-radius:var(--radius-sm); background:var(--chip-bg); font-size:12px; color:var(--text-secondary); margin-bottom:12px; }
+.asst-messages { display:flex; flex-direction:column; gap:10px; max-height:56vh; overflow:auto; padding-bottom:8px; }
+.asst-message { max-width:88%; padding:11px 13px; border-radius:16px; font-size:13px; line-height:1.5; }
+.asst-user { align-self:flex-end; background:var(--primary); color:#fff; border-bottom-right-radius:5px; }
+.asst-bot { align-self:flex-start; background:var(--card-bg); border:1px solid var(--border-soft); border-bottom-left-radius:5px; }
+.asst-source { margin-top:7px; color:var(--text-secondary); }
+.asst-action-card { margin-top:10px; padding:10px; border-radius:var(--radius-sm); background:var(--chip-bg); }
+.asst-composer { display:grid; grid-template-columns:1fr auto; align-items:end; gap:8px; margin-top:12px; }
+.asst-composer textarea { min-height:48px; max-height:110px; resize:vertical; border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:11px; background:var(--card-bg); color:var(--text-primary); font:inherit; }
+.asst-composer textarea:focus { outline:2px solid var(--accent); outline-offset:1px; }
+@media (min-width:700px) { .asst-messages { max-height:62vh; } .asst-message { max-width:72%; } }

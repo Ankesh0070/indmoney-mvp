@@ -1,0 +1,18 @@
+[
+  { "id": "f1",  "name": "BlueCrest Equity Growth Fund",       "category": "Equity", "sub": "Large Cap",  "risk": "Very High", "nav": 142.37, "r1y": 18.4, "r3y": 15.2, "r5y": 13.8, "minSip": 500,  "rating": 4, "color": "#5B4FE9" },
+  { "id": "f2",  "name": "Horizon Flexicap Fund",               "category": "Equity", "sub": "Flexi Cap",  "risk": "Very High", "nav": 88.12,  "r1y": 21.1, "r3y": 16.7, "r5y": 14.9, "minSip": 500,  "rating": 5, "color": "#7C3AED" },
+  { "id": "f3",  "name": "Momentum Midcap Fund",                 "category": "Equity", "sub": "Mid Cap",    "risk": "Very High", "nav": 61.90,  "r1y": 24.6, "r3y": 19.3, "r5y": 16.1, "minSip": 500,  "rating": 4, "color": "#8B5CF6" },
+  { "id": "f4",  "name": "Pioneer Smallcap Fund",                "category": "Equity", "sub": "Small Cap",  "risk": "Very High", "nav": 45.28,  "r1y": 27.9, "r3y": 20.5, "r5y": 17.4, "minSip": 500,  "rating": 3, "color": "#A78BFA" },
+  { "id": "f5",  "name": "Value Discovery Fund",                 "category": "Equity", "sub": "Value",      "risk": "High",      "nav": 103.55, "r1y": 16.2, "r3y": 14.1, "r5y": 12.6, "minSip": 500,  "rating": 4, "color": "#5B4FE9" },
+  { "id": "f6",  "name": "Evergreen Index Fund — Nifty 50",      "category": "Index",  "sub": "Nifty 50",   "risk": "High",      "nav": 210.44, "r1y": 14.8, "r3y": 13.0, "r5y": 12.1, "minSip": 100,  "rating": 4, "color": "#10B981" },
+  { "id": "f7",  "name": "Nifty Next 50 Index Fund",              "category": "Index",  "sub": "Next 50",    "risk": "High",      "nav": 55.67,  "r1y": 17.5, "r3y": 14.4, "r5y": 12.9, "minSip": 100,  "rating": 4, "color": "#059669" },
+  { "id": "f8",  "name": "TaxSaver ELSS Growth Fund",             "category": "ELSS",   "sub": "Tax Saver",  "risk": "Very High", "nav": 72.31,  "r1y": 19.3, "r3y": 15.8, "r5y": 13.5, "minSip": 500,  "rating": 4, "color": "#F59E0B" },
+  { "id": "f9",  "name": "Steadfast Debt Fund",                   "category": "Debt",   "sub": "Corporate",  "risk": "Low",       "nav": 34.12,  "r1y": 7.1,  "r3y": 6.8,  "r5y": 6.9,  "minSip": 500,  "rating": 4, "color": "#3B82F6" },
+  { "id": "f10", "name": "Anchor Liquid Fund",                    "category": "Debt",   "sub": "Liquid",     "risk": "Low",       "nav": 28.95,  "r1y": 6.4,  "r3y": 6.1,  "r5y": 6.0,  "minSip": 1000, "rating": 5, "color": "#2563EB" },
+  { "id": "f11", "name": "Gilt Edge Government Securities Fund",  "category": "Debt",   "sub": "Gilt",       "risk": "Moderate",  "nav": 41.80,  "r1y": 7.8,  "r3y": 7.2,  "r5y": 7.0,  "minSip": 500,  "rating": 3, "color": "#1D4ED8" },
+  { "id": "f12", "name": "Corporate Bond Fund",                   "category": "Debt",   "sub": "Corp. Bond", "risk": "Moderate",  "nav": 22.64,  "r1y": 7.5,  "r3y": 6.9,  "r5y": 6.7,  "minSip": 500,  "rating": 4, "color": "#2563EB" },
+  { "id": "f13", "name": "Balanced Hybrid Advantage Fund",        "category": "Hybrid", "sub": "Balanced",   "risk": "Moderate",  "nav": 39.47,  "r1y": 12.6, "r3y": 11.4, "r5y": 10.6, "minSip": 500,  "rating": 4, "color": "#EC4899" },
+  { "id": "f14", "name": "Dynamic Asset Allocation Fund",         "category": "Hybrid", "sub": "Dynamic",    "risk": "Moderate",  "nav": 27.19,  "r1y": 11.8, "r3y": 10.9, "r5y": 10.2, "minSip": 500,  "rating": 3, "color": "#DB2777" },
+  { "id": "f15", "name": "Global Opportunities Fund",             "category": "Equity", "sub": "Global",     "risk": "Very High", "nav": 19.83,  "r1y": 13.4, "r3y": 12.0, "r5y": 11.5, "minSip": 500,  "rating": 3, "color": "#7C3AED" },
+  { "id": "f16", "name": "Summit Contra Fund",                    "category": "Equity", "sub": "Contra",     "risk": "Very High", "nav": 67.52,  "r1y": 20.7, "r3y": 15.9, "r5y": 13.2, "minSip": 500,  "rating": 4, "color": "#5B4FE9" }
+]

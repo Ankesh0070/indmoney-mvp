@@ -1,0 +1,10 @@
+{
+  "name": "indmoney-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "INDmoney academic MVP — vanilla HTML/CSS/JS SIP-support prototype with eight workflows and a multilingual RAG app guide.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js"
+  }
+}

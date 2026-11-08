@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>INDmoney — Invest with Intelligence</title>
+<meta name="description" content="INDmoney academic MVP with SIP management, fund discovery, and a goal planner.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app-root">
+  <div id="phone-frame">
+
+    <!-- Fake status bar -->
+    <div class="status-bar">
+      <span id="clock">9:41</span>
+      <div class="icons"><span>📶</span><span>📡</span><span>🔋</span></div>
+    </div>
+
+    <div id="screens">
+
+      <!-- ═══════════ SPLASH ═══════════ -->
+      <div class="screen active no-nav-pad" id="screen-splash">
+        <div class="col center-flex" style="height:100%; gap:16px;">
+          <div class="brand-mark">N</div>
+          <div class="brand-wordmark">Nivesh<span>ly</span></div>
+          <div class="muted small">Invest with Intelligence</div>
+        </div>
+      </div>
+
+      <!-- ═══════════ WELCOME / ONBOARDING ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-welcome">
+        <div class="col px" style="height:100%; padding-top:60px; padding-bottom:32px; justify-content:space-between;">
+          <div>
+            <div class="brand-mark mb-16">N</div>
+            <div class="screen-title">Track, grow and<br>understand your money.</div>
+            <div class="screen-sub mt-8">Mutual funds, SIPs and an AI assistant that reads real investor feedback — all in one simple app.</div>
+
+            <div class="card mt-32">
+              <div class="row gap-12"><span style="font-size:20px;">📊</span><div><b class="small">Track every SIP</b><div class="tiny muted">Pause, modify or resume anytime</div></div></div>
+            </div>
+            <div class="card">
+              <div class="row gap-12"><span style="font-size:20px;">🤖</span><div><b class="small">Ask the AI Assistant</b><div class="tiny muted">Grounded in 51,979 real investor reviews</div></div></div>
+            </div>
+            <div class="card">
+              <div class="row gap-12"><span style="font-size:20px;">🔒</span><div><b class="small">No advice, ever</b><div class="tiny muted">We never tell you what to buy — only what others experienced</div></div></div>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-primary" onclick="go('screen-mobile')">Get Started</button>
+            <div class="center-flex small muted mt-16">Already have an account? <button class="btn-link" onclick="go('screen-mobile')">&nbsp;Log in</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ MOBILE NUMBER ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-mobile">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="screen-title">Enter your mobile number</div>
+          <div class="screen-sub">We'll send a one-time code to verify it's you.</div>
+          <div class="mt-24">
+            <label class="field-label">Mobile Number</label>
+            <div class="row" style="gap:10px;">
+              <div class="field-input" style="width:64px; text-align:center; flex-shrink:0;">🇮🇳 +91</div>
+              <input class="field-input" id="input-mobile" type="tel" maxlength="10" placeholder="98765 43210" inputmode="numeric">
+            </div>
+          </div>
+          <button class="btn btn-primary mt-24" id="btn-send-otp" onclick="sendOtp()">Send OTP</button>
+          <div class="tiny faint mt-16" style="text-align:center;">By continuing, you agree to INDmoney's mock Terms & Privacy Policy (demo app — no real SMS is sent).</div>
+        </div>
+      </div>
+
+      <!-- ═══════════ OTP ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-otp">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="screen-title">Verify your number</div>
+          <div class="screen-sub" id="otp-sub">Enter the 4-digit code sent to your number.</div>
+          <div class="otp-row mt-24">
+            <input class="otp-box" maxlength="4" inputmode="numeric">
+            <input class="otp-box" maxlength="4" inputmode="numeric">
+            <input class="otp-box" maxlength="4" inputmode="numeric">
+            <input class="otp-box" maxlength="4" inputmode="numeric">
+          </div>
+          <div class="tiny faint mt-12">Demo mode: any 4 digits will work.</div>
+          <button class="btn btn-primary mt-24" onclick="verifyOtp()">Verify &amp; Continue</button>
+          <button class="btn btn-link mt-12" style="margin:12px auto 0; display:block;">Resend code</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ SIGNUP ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-signup">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="screen-title">Tell us about you</div>
+          <div class="screen-sub">Just the basics — you can add more later.</div>
+          <div class="mt-24 col gap-16">
+            <div>
+              <label class="field-label">Full Name</label>
+              <input class="field-input" id="input-name" type="text" placeholder="e.g. Priya Sharma">
+            </div>
+            <div>
+              <label class="field-label">Email Address</label>
+              <input class="field-input" id="input-email" type="email" placeholder="you@example.com">
+            </div>
+          </div>
+          <button class="btn btn-primary mt-24" onclick="completeSignup()">Continue</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ KYC INTRO ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-kyc-intro">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px" style="padding-top:20px;">
+          <div class="center-flex" style="font-size:54px;">🪪</div>
+          <div class="screen-title" style="text-align:center; margin-top:16px;">Quick KYC to get started</div>
+          <div class="screen-sub" style="text-align:center;">SEBI requires every investor to complete KYC before investing. It takes about 2 minutes — PAN, bank details and a quick selfie.</div>
+          <div class="card mt-32">
+            <div class="list-row"><span>1️⃣</span><div class="small bold">PAN verification</div></div>
+            <div class="list-row"><span>2️⃣</span><div class="small bold">Bank account linking</div></div>
+            <div class="list-row"><span>3️⃣</span><div class="small bold">Selfie / video KYC</div></div>
+          </div>
+          <button class="btn btn-primary mt-24" onclick="go('screen-kyc-pan')">Start KYC</button>
+          <button class="btn btn-outline mt-12" onclick="skipKyc()">Skip for now (explore only)</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ KYC: PAN ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-kyc-pan">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="step-dots">
+            <div class="step-dot current"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div>
+          </div>
+          <div class="screen-title">PAN Verification</div>
+          <div class="screen-sub">Enter your 10-character PAN. We'll validate the format (demo — no real government lookup).</div>
+          <div class="mt-24">
+            <label class="field-label">PAN Number</label>
+            <input class="field-input" id="input-pan" type="text" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase; letter-spacing:2px;">
+            <div class="tiny faint mt-8" id="pan-hint">Format: 5 letters, 4 digits, 1 letter</div>
+          </div>
+          <button class="btn btn-primary mt-24" id="btn-pan-next" onclick="submitPan()" disabled>Verify PAN</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ KYC: AADHAAR ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-kyc-aadhaar">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="step-dots">
+            <div class="step-dot done"></div><div class="step-dot current"></div><div class="step-dot"></div><div class="step-dot"></div>
+          </div>
+          <div class="screen-title">Aadhaar e-KYC</div>
+          <div class="screen-sub">Used for identity verification as per SEBI KYC norms (demo — simulated, no real UIDAI call).</div>
+          <div class="mt-24">
+            <label class="field-label">Aadhaar Number</label>
+            <input class="field-input" id="input-aadhaar" type="text" maxlength="12" placeholder="XXXX XXXX XXXX" inputmode="numeric">
+          </div>
+          <button class="btn btn-primary mt-24" onclick="submitAadhaar()">Send Aadhaar OTP</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ KYC: BANK ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-kyc-bank">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="step-dots">
+            <div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot current"></div><div class="step-dot"></div>
+          </div>
+          <div class="screen-title">Link your bank account</div>
+          <div class="screen-sub">This is where SIPs will auto-debit from (demo — no real bank connection is made).</div>
+          <div class="mt-24 col gap-16">
+            <div>
+              <label class="field-label">Account Holder Name</label>
+              <input class="field-input" id="input-bank-name" type="text" placeholder="As per bank records">
+            </div>
+            <div>
+              <label class="field-label">Account Number</label>
+              <input class="field-input" id="input-bank-acc" type="text" inputmode="numeric" placeholder="XXXXXXXXXXXX">
+            </div>
+            <div>
+              <label class="field-label">IFSC Code</label>
+              <input class="field-input" id="input-bank-ifsc" type="text" placeholder="e.g. HDFC0001234" style="text-transform:uppercase;">
+            </div>
+          </div>
+          <button class="btn btn-primary mt-24" onclick="submitBank()">Link Account</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ KYC: SELFIE ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-kyc-selfie">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px pt">
+          <div class="step-dots">
+            <div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot current"></div>
+          </div>
+          <div class="screen-title">Selfie Verification</div>
+          <div class="screen-sub">Last step — a quick liveness check (demo simulation, no camera access used).</div>
+          <div class="center-flex mt-32" style="height:220px; border:2px dashed var(--border); border-radius:20px; flex-direction:column; gap:10px;">
+            <span style="font-size:46px;">🤳</span>
+            <span class="small muted" id="selfie-status">Tap below to simulate capture</span>
+          </div>
+          <button class="btn btn-primary mt-24" id="btn-selfie" onclick="submitSelfie()">Capture Selfie (Simulated)</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ KYC SUCCESS ═══════════ -->
+      <div class="screen screen-light no-nav-pad" id="screen-kyc-success">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px center-flex" style="height:calc(100% - 56px); flex-direction:column; gap:14px; text-align:center;">
+          <div style="font-size:60px;">✅</div>
+          <div class="screen-title">KYC Submitted!</div>
+          <div class="screen-sub">Your KYC is under review (simulated — instantly approved for this demo). You're all set to start investing.</div>
+          <button class="btn btn-primary mt-24" style="width:100%;" onclick="finishOnboarding()">Go to Dashboard</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ HOME DASHBOARD ═══════════ -->
+      <div class="screen" id="screen-home">
+        <div class="hero-gradient">
+          <div class="row-between">
+            <div class="row gap-8">
+              <button class="back-btn" style="background:rgba(255,255,255,0.15); border:none; color:#fff;" onclick="goBack()">←</button>
+              <div>
+                <div class="hero-greeting" id="home-greeting">Good morning,</div>
+                <div class="bold" style="font-size:16px;" id="home-username">Investor</div>
+              </div>
+            </div>
+            <button class="back-btn" style="background:rgba(255,255,255,0.15); border:none; color:#fff;" onclick="go('screen-profile')">👤</button>
+          </div>
+          <div class="hero-amount" id="home-networth">₹0</div>
+          <div class="hero-change">
+            <span class="chip" id="home-change-chip">+₹0 (0%) today</span>
+            <span class="sim-chip">Simulated</span>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-action" onclick="go('screen-explore')"><span class="qa-icon">💰</span><span class="qa-label">Invest</span></button>
+          <button class="quick-action" onclick="go('screen-sips')"><span class="qa-icon">🔁</span><span class="qa-label">My SIPs</span></button>
+          <button class="quick-action" onclick="go('screen-planner')"><span class="qa-icon">🎯</span><span class="qa-label">Goal Planner</span></button>
+          <button class="quick-action" onclick="go('screen-transactions')"><span class="qa-icon">🧾</span><span class="qa-label">History</span></button>
+        </div>
+
+        <div class="px pt">
+          <button class="home-rag-card" onclick="go('screen-assistant-dashboard')" aria-label="Open RAG Assistant">
+            <span class="home-rag-orb" aria-hidden="true">✦</span>
+            <span class="home-rag-copy">
+              <span class="home-rag-kicker"><span class="home-rag-live-dot"></span> RAG APP GUIDE</span>
+              <strong>Hi! Need help using the app?</strong>
+              <span>Understand the journey, find a feature, or go directly to the right screen.</span>
+              <small>App guidance only · No investment advice</small>
+            </span>
+            <span class="home-rag-arrow" aria-hidden="true">→</span>
+          </button>
+
+          <div id="recovery-home-slot"></div>
+
+          <div class="card">
+            <div class="section-header"><h3>Portfolio Allocation</h3></div>
+            <div id="allocation-bars" class="col gap-12"></div>
+          </div>
+
+          <div class="section-header mt-16"><h3>Your Active SIPs</h3><button class="btn-link" onclick="go('screen-sips')">See all</button></div>
+          <div id="home-sip-preview"></div>
+
+          <div class="card-glass mt-16" style="background:var(--promo-grad);" onclick="go('screen-planner')">
+            <div class="row gap-12">
+              <span style="font-size:26px;">🎯</span>
+              <div>
+                <b class="small">Plan a Goal</b>
+                <div class="tiny muted mt-4">See what a monthly SIP could grow into over time.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SIP HUB ═══════════ -->
+      <div class="screen" id="screen-sips">
+        <div class="topbar solid">
+          <button class="back-btn" onclick="goBack()">←</button>
+          <div class="topbar-title" style="flex:1;">My SIPs</div>
+          <button class="back-btn" style="position:relative;" onclick="go('screen-recovery-notifications')" aria-label="Recovery notifications">🔔<span id="recovery-bell-dot" class="recovery-dot" style="position:absolute; top:8px; right:9px; display:none;"></span></button>
+        </div>
+        <div class="px pt">
+          <div class="card-glass">
+            <div class="row-between">
+              <div><div class="tiny" style="opacity:0.8;">Monthly SIP Commitment</div><div class="bold" style="font-size:22px;" id="sip-total-monthly">₹0</div></div>
+              <span style="font-size:28px;">🔁</span>
+            </div>
+          </div>
+          <div id="sip-list"></div>
+          <button class="btn btn-secondary mt-12" onclick="go('screen-explore')">+ Start a New SIP</button>
+
+          <div id="recovery-sips-slot" class="mt-24"></div>
+          <div id="sched-sips-slot" class="mt-24"></div>
+          <div id="pause-sips-slot" class="mt-24"></div>
+          <div id="mandate-sips-slot" class="mt-24"></div>
+          <div id="cf-sips-slot" class="mt-24"></div>
+          <div id="edu-sips-slot" class="mt-24"></div>
+          <div id="disc-sips-slot" class="mt-24"></div>
+          <div id="assistant-sips-slot" class="mt-24"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ EXPLORE ═══════════ -->
+      <div class="screen" id="screen-explore">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Explore Funds</div></div>
+        <div class="px pt">
+          <input class="field-input" id="explore-search" placeholder="🔍 Search funds (e.g. index, debt, elss)" oninput="renderExplore()">
+          <div class="pill-row mt-12" id="category-pills"></div>
+          <div class="tiny faint mt-12 mb-8">⚠️ Sample illustrative data for demo purposes — not real-time market data, not a recommendation.</div>
+          <div id="fund-list"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ FUND DETAIL ═══════════ -->
+      <div class="screen" id="screen-fund-detail">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title" id="fd-name">Fund</div></div>
+        <div class="px pt" id="fund-detail-body"></div>
+      </div>
+
+      <!-- ═══════════ SIP SETUP ═══════════ -->
+      <div class="screen" id="screen-sip-setup">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Start SIP</div></div>
+        <div class="px pt">
+          <div class="card" id="sip-setup-fund-card"></div>
+          <label class="field-label mt-16">Monthly SIP Amount</label>
+          <input class="field-input" id="sip-amount" type="number" inputmode="numeric" placeholder="e.g. 2000">
+          <div class="pill-row mt-8">
+            <button class="pill" onclick="setSipAmount(500)">₹500</button>
+            <button class="pill" onclick="setSipAmount(1000)">₹1,000</button>
+            <button class="pill" onclick="setSipAmount(2000)">₹2,000</button>
+            <button class="pill" onclick="setSipAmount(5000)">₹5,000</button>
+          </div>
+          <label class="field-label mt-16">SIP Date (every month)</label>
+          <select class="field-input" id="sip-date">
+            <option>1st</option><option selected>5th</option><option>10th</option><option>15th</option><option>20th</option><option>25th</option>
+          </select>
+          <div class="card-flat mt-16">
+            <div class="row-between tiny"><span class="muted">SIP Amount</span><span class="bold" id="sip-review-amount">₹0</span></div>
+            <div class="row-between tiny mt-8"><span class="muted">Debit Date</span><span class="bold" id="sip-review-date">5th of every month</span></div>
+            <div class="row-between tiny mt-8"><span class="muted">Mandate</span><span class="bold">NACH Auto-debit</span></div>
+          </div>
+          <button class="btn btn-primary mt-24" onclick="confirmSip()">Confirm &amp; Start SIP</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ SIP SUCCESS ═══════════ -->
+      <div class="screen no-nav-pad" id="screen-sip-success">
+        <div class="topbar"><button class="back-btn" onclick="goBack()">←</button></div>
+        <div class="px center-flex" style="height:calc(100% - 56px); flex-direction:column; gap:12px; text-align:center;">
+          <div style="font-size:60px;">🎉</div>
+          <div class="screen-title">SIP Started!</div>
+          <div class="screen-sub" id="sip-success-detail">Your SIP has been set up.</div>
+          <div class="card mt-16" style="width:100%; background:var(--accent-tint-soft); box-shadow:none;">
+            <div class="tiny" style="color:var(--accent);">💡 You can pause, modify or cancel this SIP anytime from the SIPs tab — no penalty, no questions asked.</div>
+          </div>
+          <button class="btn btn-primary mt-16" style="width:100%;" onclick="go('screen-sips')">View My SIPs</button>
+          <button class="btn btn-outline mt-8" style="width:100%;" onclick="go('screen-home')">Back to Home</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ TRANSACTIONS ═══════════ -->
+      <div class="screen" id="screen-transactions">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Transaction History</div></div>
+        <div class="px pt" id="transactions-list"></div>
+      </div>
+
+      <!-- ═══════════ GOAL PLANNER ═══════════ -->
+      <div class="screen" id="screen-planner">
+        <div class="topbar solid">
+          <button class="back-btn" onclick="goBack()">←</button>
+          <div>
+            <div class="topbar-title">🎯 Goal Planner</div>
+            <div class="tiny muted">Estimate what a monthly SIP could grow to</div>
+          </div>
+        </div>
+        <div class="px pt">
+          <div class="card">
+            <div class="section-header"><h3>Your SIP</h3></div>
+            <div class="col gap-12 mt-8">
+              <div>
+                <div class="tiny muted" style="margin-bottom:4px;">Monthly investment (₹)</div>
+                <input class="field-input" id="planner-monthly" type="number" min="0" step="100" value="5000" oninput="calculateGoal()">
+              </div>
+              <div>
+                <div class="tiny muted" style="margin-bottom:4px;">Duration (years)</div>
+                <input class="field-input" id="planner-years" type="number" min="0" step="1" value="10" oninput="calculateGoal()">
+              </div>
+              <div>
+                <div class="tiny muted" style="margin-bottom:4px;">Expected annual return (%)</div>
+                <input class="field-input" id="planner-return" type="number" min="0" step="0.5" value="12" oninput="calculateGoal()">
+              </div>
+            </div>
+          </div>
+          <div id="planner-result" class="mt-16"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ PROFILE ═══════════ -->
+      <div class="screen" id="screen-profile">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Profile</div></div>
+        <div class="px pt">
+          <div class="card center-flex" style="flex-direction:column; gap:8px;">
+            <div class="brand-mark" style="font-size:20px;" id="profile-initial">I</div>
+            <div class="bold" id="profile-name">Investor</div>
+            <div class="small muted" id="profile-mobile">+91 00000 00000</div>
+            <span class="badge badge-active mt-8" id="profile-kyc-badge">KYC Verified</span>
+          </div>
+
+          <div class="card mt-16">
+            <div class="list-row"><span>🏦</span><div class="small bold" style="flex:1;">Linked Bank Account</div><span class="tiny muted" id="profile-bank">—</span></div>
+            <div class="list-row"><span>📧</span><div class="small bold" style="flex:1;">Email</div><span class="tiny muted" id="profile-email">—</span></div>
+            <div class="list-row"><span>🪪</span><div class="small bold" style="flex:1;">PAN</div><span class="tiny muted" id="profile-pan">—</span></div>
+          </div>
+
+          <div class="card mt-16">
+            <div class="list-row"><span>🔔</span><div class="small bold" style="flex:1;">Notifications</div>
+              <label class="switch"><input type="checkbox" checked><span class="switch-track"></span></label>
+            </div>
+            <div class="list-row"><span>🌙</span><div class="small bold" style="flex:1;">Dark Mode</div>
+              <label class="switch"><input type="checkbox"><span class="switch-track"></span></label>
+            </div>
+          </div>
+
+          <div class="card mt-16">
+            <div class="list-row" style="cursor:pointer;"><span>❓</span><div class="small bold">Help & Support</div></div>
+            <div class="list-row" style="cursor:pointer;"><span>📄</span><div class="small bold">Statements & Reports</div></div>
+            <div class="list-row" style="cursor:pointer;"><span>ℹ️</span><div class="small bold">About INDmoney</div></div>
+          </div>
+
+          <button class="btn btn-danger-outline mt-16" onclick="logout()">Log Out</button>
+          <div class="tiny faint mt-16" style="text-align:center;">INDmoney MVP · Demo build for academic research · Not a real brokerage</div>
+        </div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: SIP DETAILS ═══════════ -->
+      <div class="screen" id="screen-recovery-details">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Details</div></div>
+        <div class="px pt" id="recovery-details-body"></div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: PAYMENT FAILURE EXPLANATION ═══════════ -->
+      <div class="screen" id="screen-recovery-failure">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Payment Failed</div></div>
+        <div class="px pt">
+          <div id="recovery-failure-body"></div>
+          <div id="recovery-failure-actions" class="col gap-8 mb-16"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: STEP-BY-STEP RECOVERY ═══════════ -->
+      <div class="screen" id="screen-recovery-stepper">
+        <div class="topbar solid"><button class="back-btn" onclick="RecoveryUI.cancelStepper()">←</button><div class="topbar-title">Resolve Instalment</div></div>
+        <div class="px pt">
+          <div id="recovery-stepper-progress"></div>
+          <div id="recovery-stepper-content" class="mt-16"></div>
+          <div id="recovery-stepper-nav" class="row gap-8 mt-24"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: PAYMENT RESULT ═══════════ -->
+      <div class="screen no-nav-pad" id="screen-recovery-result">
+        <div class="topbar"><button class="back-btn" onclick="go('screen-sips')">←</button></div>
+        <div class="px" id="recovery-result-body" style="padding-top:10px;"></div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: PAYMENT HISTORY ═══════════ -->
+      <div class="screen" id="screen-recovery-history">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Payment History</div></div>
+        <div class="px pt" id="recovery-history-list"></div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: NOTIFICATIONS ═══════════ -->
+      <div class="screen" id="screen-recovery-notifications">
+        <div class="topbar solid">
+          <button class="back-btn" onclick="goBack()">←</button>
+          <div class="topbar-title" style="flex:1;">Notifications</div>
+          <button class="btn-link" onclick="RecoveryUI.markAllRead()">Mark all read</button>
+        </div>
+        <div class="px pt">
+          <div class="card">
+            <div class="recovery-reminder-toggle">
+              <div><div class="small bold">Recovery reminders</div><div class="tiny muted">Get reminded about unresolved failed instalments</div></div>
+              <label class="switch"><input type="checkbox" id="recovery-reminders-toggle" onchange="RecoveryUI.toggleReminders(this.checked)"><span class="switch-track"></span></label>
+            </div>
+            <div class="recovery-reminder-toggle" style="border-top:1px solid var(--border);">
+              <div><div class="small bold">Simulate offline mode</div><div class="tiny muted">Demo: pauses recovery actions as pending until back online</div></div>
+              <label class="switch"><input type="checkbox" id="recovery-offline-toggle" onchange="RecoveryUI.toggleOffline(this.checked)"><span class="switch-track"></span></label>
+            </div>
+          </div>
+          <div id="recovery-notif-list"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: SUPPORT ═══════════ -->
+      <div class="screen" id="screen-recovery-support">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Support</div></div>
+        <div class="px pt" id="recovery-support-body"></div>
+      </div>
+
+      <!-- ═══════════ RECOVERY: ANALYTICS (DEMO) ═══════════ -->
+      <div class="screen" id="screen-recovery-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Recovery Analytics</div></div>
+        <div class="px pt" id="recovery-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: OVERVIEW ═══════════ -->
+      <div class="screen" id="screen-sched-overview">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Salary-Aligned SIP Scheduling</div></div>
+        <div class="px pt" id="sched-overview-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: EXPECTED INCOME DATE SETUP ═══════════ -->
+      <div class="screen" id="screen-sched-income-setup">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Expected Income Date</div></div>
+        <div class="px pt" id="sched-income-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: SIP AND INCOME CALENDAR ═══════════ -->
+      <div class="screen" id="screen-sched-calendar">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP &amp; Income Calendar</div></div>
+        <div class="px pt" id="sched-calendar-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: DATE MISMATCH DETECTION ═══════════ -->
+      <div class="screen" id="screen-sched-mismatch">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Schedule vs. Income</div></div>
+        <div class="px pt" id="sched-mismatch-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: ELIGIBLE SIP DATE OPTIONS ═══════════ -->
+      <div class="screen" id="screen-sched-eligible-dates">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Available SIP Dates</div></div>
+        <div class="px pt" id="sched-eligible-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: DATE CHANGE CONFIRMATION ═══════════ -->
+      <div class="screen" id="screen-sched-confirm">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Confirm Date Change</div></div>
+        <div class="px pt" id="sched-confirm-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: REQUEST PROCESSING AND RESULTS ═══════════ -->
+      <div class="screen" id="screen-sched-request">
+        <div class="topbar solid"><button class="back-btn" onclick="go('screen-sched-overview')">←</button><div class="topbar-title">Scheduling Request</div></div>
+        <div class="px pt" id="sched-request-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: HISTORY ═══════════ -->
+      <div class="screen" id="screen-sched-history">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Scheduling History</div></div>
+        <div class="px pt" id="sched-history-body"></div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: REMINDERS AND NOTIFICATIONS ═══════════ -->
+      <div class="screen" id="screen-sched-notifications">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Scheduling Notifications</div></div>
+        <div class="px pt">
+          <div class="card">
+            <div class="recovery-reminder-toggle">
+              <div><div class="small bold">SIP &amp; income reminders</div><div class="tiny muted">Remind me about upcoming instalments, income dates and date-change updates</div></div>
+              <label class="switch"><input type="checkbox" id="sched-reminder-toggle" onchange="SchedulingUI.setReminderPref(this.checked)"><span class="switch-track"></span></label>
+            </div>
+          </div>
+          <div id="sched-notif-list"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SCHEDULING: FEATURE ANALYTICS (DEMO) ═══════════ -->
+      <div class="screen" id="screen-sched-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Scheduling Analytics</div></div>
+        <div class="px pt" id="sched-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: MY SIPs DASHBOARD ═══════════ -->
+      <div class="screen" id="screen-pause-dashboard">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Pause &amp; Resume Manager</div></div>
+        <div class="px pt" id="pause-dashboard-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: SIP MANAGEMENT CENTER ═══════════ -->
+      <div class="screen" id="screen-pause-manage">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Manage SIP</div></div>
+        <div class="px pt" id="pause-manage-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: ELIGIBILITY CHECK ═══════════ -->
+      <div class="screen" id="screen-pause-eligibility">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Pause Eligibility</div></div>
+        <div class="px pt" id="pause-eligibility-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: SELECT DURATION ═══════════ -->
+      <div class="screen" id="screen-pause-duration">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Select Pause Duration</div></div>
+        <div class="px pt" id="pause-duration-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: IMPACT PREVIEW ═══════════ -->
+      <div class="screen" id="screen-pause-impact">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Pause Impact Preview</div></div>
+        <div class="px pt" id="pause-impact-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: CONFIRMATION ═══════════ -->
+      <div class="screen" id="screen-pause-confirm">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Confirm Pause</div></div>
+        <div class="px pt" id="pause-confirm-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: REQUEST TRACKER ═══════════ -->
+      <div class="screen" id="screen-pause-tracker">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Pause Request Status</div></div>
+        <div class="px pt" id="pause-tracker-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: PAUSED SIP DASHBOARD ═══════════ -->
+      <div class="screen" id="screen-pause-paused">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Paused SIP</div></div>
+        <div class="px pt" id="pause-paused-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: EARLY RESUME FLOW ═══════════ -->
+      <div class="screen" id="screen-pause-early-resume">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Resume SIP</div></div>
+        <div class="px pt" id="pause-early-resume-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: RESUME REQUEST TRACKER ═══════════ -->
+      <div class="screen" id="screen-pause-resume-tracker">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Resume Request Status</div></div>
+        <div class="px pt" id="pause-resume-tracker-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: PAUSE & RESUME HISTORY ═══════════ -->
+      <div class="screen" id="screen-pause-history">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Pause &amp; Resume History</div></div>
+        <div class="px pt" id="pause-history-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: REMINDERS AND NOTIFICATIONS ═══════════ -->
+      <div class="screen" id="screen-pause-notifications">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Pause Notifications</div></div>
+        <div class="px pt">
+          <div class="card">
+            <div class="recovery-reminder-toggle">
+              <div><div class="small bold">Pause &amp; resume reminders</div><div class="tiny muted">Remind me about pause approvals, upcoming resumes and reauthorization needs</div></div>
+              <label class="switch"><input type="checkbox" id="pause-reminder-toggle"><span class="switch-track"></span></label>
+            </div>
+          </div>
+          <div id="pause-notif-list" class="mt-16"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ PAUSE: SUPPORT & EXCEPTIONS ═══════════ -->
+      <div class="screen" id="screen-pause-support">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Support &amp; Exceptions</div></div>
+        <div class="px pt" id="pause-support-body"></div>
+      </div>
+
+      <!-- ═══════════ PAUSE: FEATURE ANALYTICS (DEMO) ═══════════ -->
+      <div class="screen" id="screen-pause-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Pause/Resume Analytics</div></div>
+        <div class="px pt" id="pause-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: AUTOPAY HEALTH OVERVIEW ═══════════ -->
+      <div class="screen" id="screen-mandate-dashboard">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">AutoPay Health</div></div>
+        <div class="px pt" id="mandate-dashboard-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: MANDATE DETAILS ═══════════ -->
+      <div class="screen" id="screen-mandate-details">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Mandate Details</div></div>
+        <div class="px pt" id="mandate-details-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: ISSUE DETECTION ═══════════ -->
+      <div class="screen" id="screen-mandate-issues">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">AutoPay Issues</div></div>
+        <div class="px pt" id="mandate-issues-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: ISSUE EXPLANATION ═══════════ -->
+      <div class="screen" id="screen-mandate-explain">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">What This Means</div></div>
+        <div class="px pt" id="mandate-explain-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: GUIDED REPAIR ═══════════ -->
+      <div class="screen" id="screen-mandate-repair">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Repair AutoPay</div></div>
+        <div class="px pt" id="mandate-repair-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: SIMULATED REAUTHORIZATION ═══════════ -->
+      <div class="screen" id="screen-mandate-reauth">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Simulated Authorization</div></div>
+        <div class="px pt" id="mandate-reauth-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: REPLACEMENT FLOW ═══════════ -->
+      <div class="screen" id="screen-mandate-replacement">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Replacement Mandate</div></div>
+        <div class="px pt" id="mandate-replacement-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: VERIFICATION & STATUS TRACKER ═══════════ -->
+      <div class="screen" id="screen-mandate-tracker">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Repair Status</div></div>
+        <div class="px pt" id="mandate-tracker-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: PAYMENT READINESS ═══════════ -->
+      <div class="screen" id="screen-mandate-readiness">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Payment Readiness</div></div>
+        <div class="px pt" id="mandate-readiness-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: REMINDERS ═══════════ -->
+      <div class="screen" id="screen-mandate-notifications">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">AutoPay Notifications</div></div>
+        <div class="px pt">
+          <div class="card">
+            <div class="recovery-reminder-toggle">
+              <div><div class="small bold">AutoPay reminders</div><div class="tiny muted">Remind me about mandate issues, authorization updates and upcoming instalments with an unresolved mandate problem</div></div>
+              <label class="switch"><input type="checkbox" id="mandate-reminder-toggle"><span class="switch-track"></span></label>
+            </div>
+          </div>
+          <div id="mandate-notif-list" class="mt-16"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ MANDATE: SUPPORT & EXCEPTIONS ═══════════ -->
+      <div class="screen" id="screen-mandate-support">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Support &amp; Exceptions</div></div>
+        <div class="px pt" id="mandate-support-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: HISTORY ═══════════ -->
+      <div class="screen" id="screen-mandate-history">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Mandate History</div></div>
+        <div class="px pt" id="mandate-history-body"></div>
+      </div>
+
+      <!-- ═══════════ MANDATE: FEATURE ANALYTICS (DEMO) ═══════════ -->
+      <div class="screen" id="screen-mandate-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">AutoPay Analytics</div></div>
+        <div class="px pt" id="mandate-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: OVERVIEW ═══════════ -->
+      <div class="screen" id="screen-cashflow-overview">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Cash-Flow Planner</div></div>
+        <div class="px pt" id="cf-overview-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: INCOME & EXPENSE SETUP ═══════════ -->
+      <div class="screen" id="screen-cashflow-setup">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Income &amp; Expenses</div></div>
+        <div class="px pt" id="cf-setup-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: UPCOMING SIP CALENDAR ═══════════ -->
+      <div class="screen" id="screen-cashflow-calendar">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Cash-Flow Calendar</div></div>
+        <div class="px pt" id="cf-calendar-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: TIMELINE ═══════════ -->
+      <div class="screen" id="screen-cashflow-timeline">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Cash-Flow Timeline</div></div>
+        <div class="px pt" id="cf-timeline-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: SIP COMMITMENT BREAKDOWN ═══════════ -->
+      <div class="screen" id="screen-cashflow-breakdown">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Commitments</div></div>
+        <div class="px pt" id="cf-breakdown-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: ESTIMATED GAP DETECTION ═══════════ -->
+      <div class="screen" id="screen-cashflow-gaps">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Estimated Cash-Flow Gaps</div></div>
+        <div class="px pt" id="cf-gaps-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: WHAT-IF SIMULATOR ═══════════ -->
+      <div class="screen" id="screen-cashflow-whatif">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">What-If Simulator</div></div>
+        <div class="px pt" id="cf-whatif-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: REMINDERS ═══════════ -->
+      <div class="screen" id="screen-cashflow-reminders">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Cash-Flow Reminders</div></div>
+        <div class="px pt">
+          <div class="card">
+            <div class="recovery-reminder-toggle">
+              <div><div class="small bold">Commitment reminders</div><div class="tiny muted">Let us remind you about SIPs due soon, estimated cash-flow gaps and missing planning information.</div></div>
+              <label class="switch"><input type="checkbox" id="cf-reminder-toggle"><span class="switch-track"></span></label>
+            </div>
+          </div>
+          <div id="cf-reminders-body" class="mt-16"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: ACTION CENTER ═══════════ -->
+      <div class="screen" id="screen-cashflow-actions">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Action Center</div></div>
+        <div class="px pt" id="cf-actions-body"></div>
+      </div>
+
+      <!-- ═══════════ CASH-FLOW: ANALYTICS DASHBOARD (DEMO) ═══════════ -->
+      <div class="screen" id="screen-cashflow-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Cash-Flow Analytics</div></div>
+        <div class="px pt" id="cf-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: JOURNEY OVERVIEW ═══════════ -->
+      <div class="screen" id="screen-education-overview">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">My First-Year SIP Journey</div></div>
+        <div class="px pt" id="edu-overview-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: INTERACTIVE TIMELINE ═══════════ -->
+      <div class="screen" id="screen-education-timeline">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Investment Journey Timeline</div></div>
+        <div class="px pt" id="edu-timeline-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: INVESTED VS CURRENT VALUE ═══════════ -->
+      <div class="screen" id="screen-education-value">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Invested vs Current Value</div></div>
+        <div class="px pt" id="edu-value-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: HOW SIP INVESTING WORKS ═══════════ -->
+      <div class="screen" id="screen-education-navlesson">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">How SIP Investing Works</div></div>
+        <div class="px pt" id="edu-navlesson-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: MARKET FLUCTUATION SCENARIOS ═══════════ -->
+      <div class="screen" id="screen-education-scenarios">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Understanding Market Fluctuations</div></div>
+        <div class="px pt" id="edu-scenarios-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: FIRST-YEAR EXPECTATIONS ═══════════ -->
+      <div class="screen" id="screen-education-expectations">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">First-Year Expectations</div></div>
+        <div class="px pt" id="edu-expectations-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: RETURN METRICS EXPLAINER ═══════════ -->
+      <div class="screen" id="screen-education-metrics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Return Metrics Explainer</div></div>
+        <div class="px pt" id="edu-metrics-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: LEARNING QUIZ ═══════════ -->
+      <div class="screen" id="screen-education-quiz">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Learning Quiz</div></div>
+        <div class="px pt" id="edu-quiz-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: PERSONAL LEARNING PROGRESS ═══════════ -->
+      <div class="screen" id="screen-education-progress">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">My Learning Progress</div></div>
+        <div class="px pt" id="edu-progress-body"></div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: NOTIFICATIONS ═══════════ -->
+      <div class="screen" id="screen-education-notifications">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Educational Notifications</div></div>
+        <div class="px pt">
+          <div class="card">
+            <div class="recovery-reminder-toggle">
+              <div><div class="small bold">Learning notifications</div><div class="tiny muted">Optional in-app reminders about new lessons and milestones. No real SMS or email is sent.</div></div>
+              <label class="switch"><input type="checkbox" id="edu-notif-toggle"><span class="switch-track"></span></label>
+            </div>
+          </div>
+          <div id="edu-notifications-body" class="mt-16"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ EDUCATION: ANALYTICS DASHBOARD (DEMO) ═══════════ -->
+      <div class="screen" id="screen-education-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Education Analytics</div></div>
+        <div class="px pt" id="edu-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: DASHBOARD HUB ═══════════ -->
+      <div class="screen" id="screen-discontinuation-dashboard">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Continuity Insights</div></div>
+        <div class="px pt" id="disc-dashboard-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 1 — OPTIONAL FEEDBACK OFFER ═══════════ -->
+      <div class="screen" id="screen-discontinuation-prompt">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Before You Go</div></div>
+        <div class="px pt" id="disc-prompt-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 2 — REASON SELECTION ═══════════ -->
+      <div class="screen" id="screen-discontinuation-reason">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Your Feedback</div></div>
+        <div class="px pt" id="disc-reason-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 3 — OPTIONAL REASON DETAILS ═══════════ -->
+      <div class="screen" id="screen-discontinuation-followup">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Tell Us More</div></div>
+        <div class="px pt" id="disc-followup-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 4 — CONTEXTUAL HELP OPTIONS ═══════════ -->
+      <div class="screen" id="screen-discontinuation-help">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">This Might Help</div></div>
+        <div class="px pt" id="disc-help-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 5 — HELP PREVIEW ═══════════ -->
+      <div class="screen" id="screen-discontinuation-help-preview">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Help Option</div></div>
+        <div class="px pt" id="disc-help-preview-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 6 — CANCELLATION CONTINUATION ═══════════ -->
+      <div class="screen" id="screen-discontinuation-cancel">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Cancel This SIP</div></div>
+        <div class="px pt" id="disc-cancel-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 7 — EXIT FEEDBACK CONFIRMATION ═══════════ -->
+      <div class="screen" id="screen-discontinuation-exit">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">All Set</div></div>
+        <div class="px pt" id="disc-exit-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 8 — ANALYTICS DASHBOARD (DEMO) ═══════════ -->
+      <div class="screen" id="screen-discontinuation-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Reason Discovery Analytics</div></div>
+        <div class="px pt" id="disc-analytics-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 9 — RESEARCH INSIGHTS EXPLORER ═══════════ -->
+      <div class="screen" id="screen-discontinuation-insights">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Research Insights Explorer</div></div>
+        <div class="px pt" id="disc-insights-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 10 — QUALITATIVE FEEDBACK REVIEW ═══════════ -->
+      <div class="screen" id="screen-discontinuation-feedback-review">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Qualitative Feedback Review</div></div>
+        <div class="px pt" id="disc-feedback-review-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 11 — JOURNEY HISTORY ═══════════ -->
+      <div class="screen" id="screen-discontinuation-history">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Journey History</div></div>
+        <div class="px pt" id="disc-history-body"></div>
+      </div>
+
+      <!-- ═══════════ DISCONTINUATION: SCREEN 12 — FEEDBACK PREFERENCES & PRIVACY ═══════════ -->
+      <div class="screen" id="screen-discontinuation-privacy">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Feedback &amp; Privacy</div></div>
+        <div class="px pt" id="disc-privacy-body"></div>
+      </div>
+
+      <!-- Feature 8: deterministic, read-only SIP Help Assistant -->
+      <div class="screen" id="screen-assistant-dashboard">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Help Assistant</div></div>
+        <div class="px pt" id="assistant-dashboard-body"></div>
+      </div>
+      <div class="screen" id="screen-assistant-chat">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">SIP Help Assistant</div></div>
+        <div class="px pt" id="assistant-chat-body"></div>
+      </div>
+      <div class="screen" id="screen-assistant-analytics">
+        <div class="topbar solid"><button class="back-btn" onclick="goBack()">←</button><div class="topbar-title">Assistant Analytics</div></div>
+        <div class="px pt" id="assistant-analytics-body"></div>
+      </div>
+
+    </div>
+    <!-- /screens -->
+
+    <div id="bottom-nav">
+      <button class="nav-item" data-screen="screen-home" onclick="go('screen-home')"><span class="nav-icon">🏠</span>Home</button>
+      <button class="nav-item" data-screen="screen-sips" onclick="go('screen-sips')"><span class="nav-icon">🔁</span>SIPs</button>
+      <button class="nav-item" data-screen="screen-explore" onclick="go('screen-explore')"><span class="nav-icon">🔍</span>Explore</button>
+      <button class="nav-item" data-screen="screen-planner" onclick="go('screen-planner')"><span class="nav-icon">🎯</span>Planner</button>
+      <button class="nav-item" data-screen="screen-profile" onclick="go('screen-profile')"><span class="nav-icon">👤</span>Profile</button>
+    </div>
+
+    <div id="toast"></div>
+    <div id="recovery-dialog-root"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="recovery/data.js"></script>
+<script src="recovery/store.js"></script>
+<script src="recovery/analytics.js"></script>
+<script src="recovery/components.js"></script>
+<script src="recovery/screens.js"></script>
+<script src="recovery/main.js"></script>
+<script src="scheduling/dateUtils.js"></script>
+<script src="scheduling/data.js"></script>
+<script src="scheduling/store.js"></script>
+<script src="scheduling/analytics.js"></script>
+<script src="scheduling/components.js"></script>
+<script src="scheduling/screens.js"></script>
+<script src="scheduling/main.js"></script>
+<script src="pause/data.js"></script>
+<script src="pause/store.js"></script>
+<script src="pause/analytics.js"></script>
+<script src="pause/components.js"></script>
+<script src="pause/screens.js"></script>
+<script src="pause/main.js"></script>
+<script src="mandate/data.js"></script>
+<script src="mandate/store.js"></script>
+<script src="mandate/analytics.js"></script>
+<script src="mandate/components.js"></script>
+<script src="mandate/screens.js"></script>
+<script src="mandate/main.js"></script>
+<script src="cashflow/data.js"></script>
+<script src="cashflow/engine.js"></script>
+<script src="cashflow/store.js"></script>
+<script src="cashflow/analytics.js"></script>
+<script src="cashflow/components.js"></script>
+<script src="cashflow/screens.js"></script>
+<script src="cashflow/main.js"></script>
+<script src="education/data.js"></script>
+<script src="education/engine.js"></script>
+<script src="education/store.js"></script>
+<script src="education/analytics.js"></script>
+<script src="education/components.js"></script>
+<script src="education/screens.js"></script>
+<script src="education/main.js"></script>
+<script src="discontinuation/data.js"></script>
+<script src="discontinuation/engine.js"></script>
+<script src="discontinuation/store.js"></script>
+<script src="discontinuation/analytics.js"></script>
+<script src="discontinuation/components.js"></script>
+<script src="discontinuation/screens.js"></script>
+<script src="discontinuation/main.js"></script>
+<script src="assistant/data.js"></script>
+<script src="assistant/engine.js"></script>
+<script src="assistant/store.js"></script>
+<script src="assistant/main.js"></script>
+</body>
+</html>
