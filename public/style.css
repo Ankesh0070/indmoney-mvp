@@ -164,7 +164,7 @@ h1, h2, h3 { color: var(--text-primary); }
   width: 56px; height: 56px; border-radius: 16px;
   background: #101311; border: 1px solid rgba(255, 255, 255, 0.14);
   display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 24px; color: #fff; box-shadow: var(--card-shadow);
+  font-weight: 900; font-size: 17px; letter-spacing: -0.04em; color: #fff; box-shadow: var(--card-shadow);
 }
 .brand-wordmark { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
 .brand-wordmark span { color: var(--accent); }
