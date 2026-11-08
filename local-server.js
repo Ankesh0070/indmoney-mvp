@@ -1,8 +1,8 @@
 /**
- * mvp-app/server.js
+ * mvp-app/local-server.js
  * ─────────────────────────────────────────────────────────────────────────────
  * INDmoney — standalone investing MVP. Completely separate from the
- * dashboard/: its own server, own port, own static files. It does not
+ * dashboard/: its own local server, own port, own static files. It does not
  * import, modify, or depend on anything inside dashboard/ (including the
  * RAG review-assistant, which is dashboard-only), and dashboard/server.js
  * does not depend on this file either — each runs independently on its

@@ -4,7 +4,8 @@
   "private": true,
   "description": "INDmoney academic MVP — vanilla HTML/CSS/JS SIP-support prototype with eight workflows and a multilingual RAG app guide.",
   "scripts": {
-    "start": "node server.js",
+    "start": "node local-server.js",
+    "build": "node build.js",
     "test": "node --test tests/*.test.js"
   }
 }

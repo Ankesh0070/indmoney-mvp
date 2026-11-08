@@ -10,6 +10,9 @@ npm start
 
 Open `http://localhost:4000`.
 
+Production is built as a static site with `npm run build` and deployed from
+the generated `dist/` directory.
+
 ## Test
 
 ```bash
